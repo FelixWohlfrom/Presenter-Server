@@ -6,7 +6,7 @@ set(VERSION_BETA 0)
 
 # Supported presenter protocol version
 set(PRESENTER_PROTOCOL_MIN_VERSION 1)
-set(PRESENTER_PROTOCOL_MAX_VERSION 1)
+set(PRESENTER_PROTOCOL_MAX_VERSION 2)
 
 # The subdirectories to build
 set(SUBDIRS main test)

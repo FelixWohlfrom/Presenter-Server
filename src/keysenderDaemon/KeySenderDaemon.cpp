@@ -96,6 +96,16 @@ void KeySenderDaemon::readyRead()
             qInfo("sendPrev");
             send_prev();
         }
+        else if (command == "startPresentation")
+        {
+            qInfo("startPresentation");
+            send_start_presentation();
+        }
+        else if (command == "stopPresentation")
+        {
+            qInfo("stopPresentation");
+            send_stop_presentation();
+        }
         else
         {
             qWarning("Ignoring command: '%s'", command.toStdString().c_str());

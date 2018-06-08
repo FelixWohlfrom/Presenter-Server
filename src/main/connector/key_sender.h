@@ -47,4 +47,14 @@ void send_next();
  * Will send the "previous" key to the system.
  */
 void send_prev();
+
+/**
+ * Will send the "start presentation" key to the system.
+ */
+void send_start_presentation();
+
+/**
+ * Will send the "stop presentation" key to the system.
+ */
+void send_stop_presentation();
 #endif /* SRC_MAIN_CONNECTOR_KEY_SENDER_H_ */
