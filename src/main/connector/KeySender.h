@@ -63,6 +63,16 @@ class KeySender: public QObject
          */
         void sendPrev();
 
+        /**
+         * Sends the key to start the presentation.
+         */
+        void startPresentation();
+
+        /**
+         * Sends the key to stop the presentation.
+         */
+        void stopPresentation();
+
         // FIXME: After dropping ubuntu 16.04 support, this can be moved into
         // the #ifdef __linux__ block
         signals:
