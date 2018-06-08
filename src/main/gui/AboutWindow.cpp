@@ -50,6 +50,13 @@ AboutWindow::AboutWindow(QWidget* parent) :
     #endif
     ui->version->setText(version);
 
+    ui->presenter_protocol_version->setText(
+            tr("Supported <a href=\"https://github.com/FelixWohlfrom/Presenter-Protocol\">"
+                    "Presenter Protocol</a> Version:<br />"
+                    "Minimum: %1<br />Maximum: %2")
+                .arg(QString::number(PRESENTER_PROTOCOL_MIN_VERSION),
+                     QString::number(PRESENTER_PROTOCOL_MAX_VERSION)));
+
     // The build information
     ui->compiler->setText(getCompiler());
     ui->compilerFlags->setText(getCompilerFlags());

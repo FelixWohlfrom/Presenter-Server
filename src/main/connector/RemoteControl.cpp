@@ -29,6 +29,8 @@
 #include <QJsonDocument>
 #include <QCoreApplication>
 
+#include "../../Version.h"
+
 RemoteControl::RemoteControl()
 {
     keySender = new KeySender();
@@ -44,8 +46,14 @@ RemoteControl::~RemoteControl()
 void RemoteControl::handleClientConnected(const QString &name)
 {
     write("{ \"type\": \"version\", "
-        "\"data\": '{ \"minVersion\": \"1\","
-        " \"maxVersion\": \"1\" }' }\n\n");
+        "\"data\": '{ "
+            "\"minVersion\": \""
+                + QString::number(PRESENTER_PROTOCOL_MIN_VERSION) +
+            "\", "
+            "\"maxVersion\": \""
+                + QString::number(PRESENTER_PROTOCOL_MAX_VERSION) +
+            "\" }'"
+        "}\n\n");
 
     emit RemoteControl::clientConnected(name);
 }
