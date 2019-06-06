@@ -12,7 +12,8 @@ A reference client for android can be found [here](https://github.com/FelixWohlf
 The following systems are currently supported:
 - Windows 10
 - Ubuntu 16.04 LTS
-- Ubuntu 17.10 (on both wayland and X server)
+- Ubuntu 18.04 LTS
+- Ubuntu 19.04
 
 On Linux write access to /dev/uinput or /dev/input/uinput required - e.g. as root.
 
