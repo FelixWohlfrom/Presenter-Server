@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *  Presenter. Server software to remote control a presentation.         *
- *  Copyright (C) 2017-2018 Felix Wohlfrom                               *
+ *  Copyright (C) 2017-2019 Felix Wohlfrom                               *
  *                                                                       *
  *  This program is free software: you can redistribute it and/or modify *
  *  it under the terms of the GNU General Public License as published by *
@@ -33,6 +33,7 @@
 #include "Logger.h"
 
 #include "../connector/bluetooth/BluetoothConnector.h"
+#include "../connector/network/NetworkConnector.h"
 
 namespace Ui {
     class MainWindow;
@@ -68,35 +69,59 @@ class MainWindow : public QMainWindow
 
     private slots:
         /**
-         * Used to show status information of the servers.
+         * Used to show status information for the server.
          *
          * @param message The message to display
          */
         void info(const QString &message);
 
         /**
-         * Called if an error happened during server initialization.
+         * Called if an error happened during bluetooth server initialization.
          *
          * @param message The error message to display
          */
-        void error(const QString &message);
+        void bluetoothError(const QString &message);
 
         /**
-         * Called once a server is ready to accept connections.
+         * Called once the bluetooth server is ready to accept connections.
          */
-        void serverReady();
+        void bluetoothServerReady();
 
         /**
-         * Called if a new client connected.
+         * Called if a new bluetooth client connected.
          *
          * @param name The client name
          */
-        void clientConnected(const QString &name);
+        void bluetoothClientConnected(const QString &name);
 
         /**
-         * Called if a client disconnected.
+         * Called if a bluetooth client disconnected.
          */
-        void clientDisconnected();
+        void bluetoothClientDisconnected();
+
+        /**
+         * Called if an error happened during network server initialization.
+         *
+         * @param message The error message to display
+         */
+        void networkError(const QString &message);
+
+        /**
+         * Called once the network server is ready to accept connections.
+         */
+        void networkServerReady();
+
+        /**
+         * Called if a new network client connected.
+         *
+         * @param name The client name
+         */
+        void networkClientConnected(const QString &name);
+
+        /**
+         * Called if a network client disconnected.
+         */
+        void networkClientDisconnected();
 
         /**
          * Called if a key event was sent.
@@ -123,6 +148,10 @@ class MainWindow : public QMainWindow
          */
         void showAboutScreen();
 
+        /**
+         * Will be called when the window should be restored, e.g. from system tray
+         * icon clicks.
+         */
         void restore();
 
     private:
@@ -140,6 +169,11 @@ class MainWindow : public QMainWindow
          * The bluetooth connector class. Will create the bluetooth server.
          */
         BluetoothConnector* btConnector;
+
+        /**
+         * The network connector class. Will create a network server.
+         */
+        NetworkConnector* networkConnector;
 
         /**
          * The action to open our log window.

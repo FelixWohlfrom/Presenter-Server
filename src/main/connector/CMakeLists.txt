@@ -1,5 +1,5 @@
 # The subdirectories to build
-set(SUBDIRS bluetooth)
+set(SUBDIRS bluetooth network)
 
 # Build all files in this directory
 SET(SOURCE
@@ -40,4 +40,4 @@ endforeach(SUB)
 
 # This "library" is used to allow access to all installed connectors
 add_library(Connectors)
-target_link_libraries(Connectors BluetoothConnector)
+target_link_libraries(Connectors BluetoothConnector NetworkConnector)
