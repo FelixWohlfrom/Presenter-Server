@@ -28,7 +28,7 @@ endif(UNIX)
 
 # Generate the main program
 source_group("Header Files" FILES Version.h)
-add_executable(${CMAKE_PROJECT_NAME} ${GUI_TYPE} ${RSRC} Main.cpp)
+add_executable(${CMAKE_PROJECT_NAME} ${GUI_TYPE} "${RSRC}" Main.cpp)
 target_link_libraries(${CMAKE_PROJECT_NAME} Gui)
 
 if(UNIX)

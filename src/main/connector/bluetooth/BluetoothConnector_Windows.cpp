@@ -28,7 +28,6 @@
 #include <QSettings>
 #include <QCoreApplication>
 
-#include <stdio.h>
 #include <initguid.h>
 #include <ws2bth.h>
 
