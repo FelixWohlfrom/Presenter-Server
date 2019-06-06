@@ -21,14 +21,8 @@ before_install:
   - docker cp . test:/root/
 
 install:
-  # Workarounds for ubuntu 19.04 updates
-  # Required for tzdata installation
-  - docker exec test ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
-  # Required for keyboard configuration
-  - docker exec test setxkbmap us
-  # Finally update and install required packages
   - docker exec test apt-get update
-  - docker exec test apt-get install -y cmake qt5-default qttools5-dev-tools qtconnectivity5-dev g++ xvfb
+  - docker exec -t test bash -ic "DEBIAN_FRONTEND=noninteractive apt-get install -y cmake qt5-default qttools5-dev-tools qtconnectivity5-dev g++ xvfb"
 
 script:
   - docker exec -t test bash -ic "mkdir build"
