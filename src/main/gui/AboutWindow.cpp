@@ -87,7 +87,9 @@ QString AboutWindow::getCompiler()
         #endif
         return compiler;
     #elif defined _MSC_VER
-        #if _MSC_VER == 1900
+        #if _MSC_VER == 1916
+            QString compiler = "Visual Studio 2017";
+        #elif _MSC_VER == 1900
             QString compiler = "Visual Studio 2015";
         #elif _MSC_VER == 1800
             QString compiler = "Visual Studio 2013";
