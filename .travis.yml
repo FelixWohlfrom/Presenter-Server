@@ -8,8 +8,8 @@ services:
 
 env:
   - DOCKER_IMG=ubuntu:16.04
-  - DOCKER_IMG=ubuntu:17.10
   - DOCKER_IMG=ubuntu:18.04
+  - DOCKER_IMG=ubuntu:19.04
 
 before_install:
   # Run simple code style check as early as possible to fail as early as possible
@@ -22,7 +22,7 @@ before_install:
 
 install:
   - docker exec test apt-get update
-  - docker exec test apt-get install -y cmake qt5-default qttools5-dev-tools qtconnectivity5-dev g++ xvfb
+  - docker exec -t test bash -ic "DEBIAN_FRONTEND=noninteractive apt-get install -y cmake qt5-default qttools5-dev-tools qtconnectivity5-dev g++ xvfb"
 
 script:
   - docker exec -t test bash -ic "mkdir build"
