@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *  Presenter. Server software to remote control a presentation.         *
- *  Copyright (C) 2017 Felix Wohlfrom                                    *
+ *  Copyright (C) 2017-2019 Felix Wohlfrom                               *
  *                                                                       *
  *  This program is free software: you can redistribute it and/or modify *
  *  it under the terms of the GNU General Public License as published by *
@@ -34,7 +34,8 @@
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow), btConnector(new BluetoothConnector)
+    QMainWindow(parent), ui(new Ui::MainWindow), btConnector(new BluetoothConnector),
+    networkConnector(new NetworkConnector)
 {
     // Initialize window
     ui->setupUi(this);
@@ -49,17 +50,32 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(btConnector, SIGNAL(info(QString)),
                     this, SLOT(info(QString)));
     connect(btConnector, SIGNAL(error(QString)),
-                    this, SLOT(error(QString)));
+                    this, SLOT(bluetoothError(QString)));
     connect(btConnector, SIGNAL(clientConnected(QString)),
-                    this, SLOT(clientConnected(QString)));
+                    this, SLOT(bluetoothClientConnected(QString)));
     connect(btConnector, SIGNAL(clientDisconnected()),
-                    this, SLOT(clientDisconnected()));
+                    this, SLOT(bluetoothClientDisconnected()));
     connect(btConnector, SIGNAL(keySent(QString, QString)),
                     this, SLOT(keySent(QString, QString)));
     connect(btConnector, SIGNAL(serverReady()),
-                    this, SLOT(serverReady()));
+                    this, SLOT(bluetoothServerReady()));
+
+    // The signals of our network connector
+    connect(networkConnector, SIGNAL(info(QString)),
+                    this, SLOT(info(QString)));
+    connect(networkConnector, SIGNAL(error(QString)),
+                    this, SLOT(networkError(QString)));
+    connect(networkConnector, SIGNAL(clientConnected(QString)),
+                    this, SLOT(networkClientConnected(QString)));
+    connect(networkConnector, SIGNAL(clientDisconnected()),
+                    this, SLOT(networkClientDisconnected()));
+    connect(networkConnector, SIGNAL(keySent(QString, QString)),
+                    this, SLOT(keySent(QString, QString)));
+    connect(networkConnector, SIGNAL(serverReady()),
+                    this, SLOT(networkServerReady()));
 
     btConnector->startServer();
+    networkConnector->startServer();
 
     // Create tray icon and context menu
     openAction = new QAction(tr("&Open"), this);
@@ -93,14 +109,24 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->bluetoothServerStatus->fontMetrics()
                 .boundingRect(tr("Error, see log for Details"))
                 .width());
+    ui->networkServerStatus->setMinimumWidth(
+            ui->networkServerStatus->fontMetrics()
+                .boundingRect(ui->networkServerStatus->text())
+                .width());
+    ui->networkServerStatus->setMinimumWidth(
+            ui->networkServerStatus->fontMetrics()
+                .boundingRect(tr("Error, see log for Details"))
+                .width());
 }
 
 MainWindow::~MainWindow()
 {
+    delete btConnector;
+    delete networkConnector;
+
     delete ui;
     delete icon;
     delete logger;
-    delete btConnector;
 }
 
 void MainWindow::changeEvent(QEvent *event)
@@ -135,13 +161,13 @@ void MainWindow::info(const QString &message)
     logger->append(message);
 }
 
-void MainWindow::serverReady()
+void MainWindow::bluetoothServerReady()
 {
     ui->bluetoothServerStatus->setText(
                 QString("<font color=\"#0b0\">%1</font>").arg(tr("Ready")));
 }
 
-void MainWindow::error(const QString &message)
+void MainWindow::bluetoothError(const QString &message)
 {
     logger->append(QString("<font color=\"#a33\">%1</font>").arg(message));
     ui->bluetoothServerStatus->setText(
@@ -149,17 +175,45 @@ void MainWindow::error(const QString &message)
                 .arg(tr("Error, see log for Details")));
 }
 
-void MainWindow::clientConnected(const QString &name)
+void MainWindow::bluetoothClientConnected(const QString &name)
 {
     logger->append(tr("Connected: %1").arg(name));
     ui->bluetoothServerStatus->setText(
                 QString("<font color=\"#0b0\">%1</font>").arg(tr("Connected")));
 }
 
-void MainWindow::clientDisconnected()
+void MainWindow::bluetoothClientDisconnected()
 {
     logger->append(tr("Disconnected."));
     ui->bluetoothServerStatus->setText(
+                QString("<font color=\"#0b0\">%1</font>").arg(tr("Ready")));
+}
+
+void MainWindow::networkServerReady()
+{
+    ui->networkServerStatus->setText(
+                QString("<font color=\"#0b0\">%1</font>").arg(tr("Ready")));
+}
+
+void MainWindow::networkError(const QString &message)
+{
+    logger->append(QString("<font color=\"#a33\">%1</font>").arg(message));
+    ui->networkServerStatus->setText(
+            QString("<font color=\"#a33\">%1</font>")
+                .arg(tr("Error, see log for Details")));
+}
+
+void MainWindow::networkClientConnected(const QString &name)
+{
+    logger->append(tr("Connected: %1").arg(name));
+    ui->networkServerStatus->setText(
+                QString("<font color=\"#0b0\">%1</font>").arg(tr("Connected")));
+}
+
+void MainWindow::networkClientDisconnected()
+{
+    logger->append(tr("Disconnected."));
+    ui->networkServerStatus->setText(
                 QString("<font color=\"#0b0\">%1</font>").arg(tr("Ready")));
 }
 
