@@ -132,7 +132,6 @@ void BluetoothConnector::clientConnected()
 void BluetoothConnector::clientDisconnected()
 {
     QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(sender());
-
     if (!socket)
     {
         return;
@@ -147,7 +146,6 @@ void BluetoothConnector::clientDisconnected()
 void BluetoothConnector::readSocket()
 {
     QBluetoothSocket *socket = qobject_cast<QBluetoothSocket *>(sender());
-
     if (!socket)
     {
         return;
@@ -169,7 +167,8 @@ void BluetoothConnector::write(const QString& message)
     {
         QByteArray messageToSend(message.toUtf8());
         int bytesSent = 0;
-        while (bytesSent < messageToSend.length()) {
+        while (bytesSent < messageToSend.length())
+        {
             int sent = socket->write(messageToSend);
             messageToSend = messageToSend.mid(sent);
             bytesSent += sent;
