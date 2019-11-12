@@ -69,6 +69,11 @@ class MainWindow : public QMainWindow
 
     private slots:
         /**
+         * Will be called in background thread to start the servers
+         */
+        void startServer();
+
+        /**
          * Used to show status information for the server.
          *
          * @param message The message to display

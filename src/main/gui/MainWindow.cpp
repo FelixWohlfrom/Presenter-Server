@@ -30,12 +30,12 @@
 
 #include <QIcon>
 #include <QMenu>
+#include <QThread>
 #include <QCloseEvent>
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow), btConnector(new BluetoothConnector),
-    networkConnector(new NetworkConnector)
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
     // Initialize window
     ui->setupUi(this);
@@ -45,37 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Initialize the logger window
     logger = new Logger(this);
-
-    // The signals of our bt connector
-    connect(btConnector, SIGNAL(info(QString)),
-                    this, SLOT(info(QString)));
-    connect(btConnector, SIGNAL(error(QString)),
-                    this, SLOT(bluetoothError(QString)));
-    connect(btConnector, SIGNAL(clientConnected(QString)),
-                    this, SLOT(bluetoothClientConnected(QString)));
-    connect(btConnector, SIGNAL(clientDisconnected()),
-                    this, SLOT(bluetoothClientDisconnected()));
-    connect(btConnector, SIGNAL(keySent(QString, QString)),
-                    this, SLOT(keySent(QString, QString)));
-    connect(btConnector, SIGNAL(serverReady()),
-                    this, SLOT(bluetoothServerReady()));
-
-    // The signals of our network connector
-    connect(networkConnector, SIGNAL(info(QString)),
-                    this, SLOT(info(QString)));
-    connect(networkConnector, SIGNAL(error(QString)),
-                    this, SLOT(networkError(QString)));
-    connect(networkConnector, SIGNAL(clientConnected(QString)),
-                    this, SLOT(networkClientConnected(QString)));
-    connect(networkConnector, SIGNAL(clientDisconnected()),
-                    this, SLOT(networkClientDisconnected()));
-    connect(networkConnector, SIGNAL(keySent(QString, QString)),
-                    this, SLOT(keySent(QString, QString)));
-    connect(networkConnector, SIGNAL(serverReady()),
-                    this, SLOT(networkServerReady()));
-
-    btConnector->startServer();
-    networkConnector->startServer();
 
     // Create tray icon and context menu
     openAction = new QAction(tr("&Open"), this);
@@ -117,6 +86,12 @@ MainWindow::MainWindow(QWidget *parent) :
             ui->networkServerStatus->fontMetrics()
                 .boundingRect(tr("Error, see log for Details"))
                 .width());
+
+    // Start the server in a background thread to keep the UI responsible
+    QTimer *serverStartTimer = new QTimer();
+    serverStartTimer->setSingleShot(true);
+    connect(serverStartTimer, SIGNAL(timeout()), this, SLOT(startServer()));
+    serverStartTimer->start(100);
 }
 
 MainWindow::~MainWindow()
@@ -154,6 +129,43 @@ void MainWindow::changeEvent(QEvent *event)
         hide();
         event->ignore();
     }
+}
+
+void MainWindow::startServer()
+{
+    btConnector = new BluetoothConnector();
+    networkConnector = new NetworkConnector();
+
+    // The signals of our bt connector
+    connect(btConnector, SIGNAL(info(QString)),
+                    this, SLOT(info(QString)));
+    connect(btConnector, SIGNAL(error(QString)),
+                    this, SLOT(bluetoothError(QString)));
+    connect(btConnector, SIGNAL(clientConnected(QString)),
+                    this, SLOT(bluetoothClientConnected(QString)));
+    connect(btConnector, SIGNAL(clientDisconnected()),
+                    this, SLOT(bluetoothClientDisconnected()));
+    connect(btConnector, SIGNAL(keySent(QString, QString)),
+                    this, SLOT(keySent(QString, QString)));
+    connect(btConnector, SIGNAL(serverReady()),
+                    this, SLOT(bluetoothServerReady()));
+
+    // The signals of our network connector
+    connect(networkConnector, SIGNAL(info(QString)),
+                    this, SLOT(info(QString)));
+    connect(networkConnector, SIGNAL(error(QString)),
+                    this, SLOT(networkError(QString)));
+    connect(networkConnector, SIGNAL(clientConnected(QString)),
+                    this, SLOT(networkClientConnected(QString)));
+    connect(networkConnector, SIGNAL(clientDisconnected()),
+                    this, SLOT(networkClientDisconnected()));
+    connect(networkConnector, SIGNAL(keySent(QString, QString)),
+                    this, SLOT(keySent(QString, QString)));
+    connect(networkConnector, SIGNAL(serverReady()),
+                    this, SLOT(networkServerReady()));
+
+    btConnector->startServer();
+    networkConnector->startServer();
 }
 
 void MainWindow::info(const QString &message)
