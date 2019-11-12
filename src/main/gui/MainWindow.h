@@ -166,6 +166,11 @@ class MainWindow : public QMainWindow
         Ui::MainWindow* ui;
 
         /**
+         * Timer thread to start up the connectors
+         */
+        QTimer* serverStartTimer;
+
+        /**
          * The logger window.
          */
         Logger* logger;

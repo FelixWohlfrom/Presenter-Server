@@ -88,14 +88,16 @@ MainWindow::MainWindow(QWidget *parent) :
                 .width());
 
     // Start the server in a background thread to keep the UI responsible
-    QTimer *serverStartTimer = new QTimer();
+    serverStartTimer = new QTimer();
     serverStartTimer->setSingleShot(true);
     connect(serverStartTimer, SIGNAL(timeout()), this, SLOT(startServer()));
-    serverStartTimer->start(100);
+    serverStartTimer->start(10);
+    QThread::msleep(20);
 }
 
 MainWindow::~MainWindow()
 {
+    delete serverStartTimer;
     delete btConnector;
     delete networkConnector;
 
