@@ -35,7 +35,8 @@
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow),
+    btConnector(NULL), networkConnector(NULL)
 {
     // Initialize window
     ui->setupUi(this);
@@ -92,11 +93,22 @@ MainWindow::MainWindow(QWidget *parent) :
     serverStartTimer->setSingleShot(true);
     connect(serverStartTimer, SIGNAL(timeout()), this, SLOT(startServer()));
     serverStartTimer->start(10);
-    QThread::msleep(20);
 }
 
 MainWindow::~MainWindow()
 {
+    // Make sure that the connectors are properly
+    // initialized before deleting them
+    while (btConnector == NULL)
+    {
+        QThread::msleep(100);
+        QApplication::processEvents();
+    }
+    while (networkConnector == NULL)
+    {
+        QThread::msleep(100);
+        QApplication::processEvents();
+    }
     delete serverStartTimer;
     delete btConnector;
     delete networkConnector;
