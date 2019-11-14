@@ -1,4 +1,4 @@
-## Presenter Server for Windows and Linux [![Build Status](https://travis-ci.org/FelixWohlfrom/Presenter-Server.svg?branch=master)](https://travis-ci.org/FelixWohlfrom/Presenter-Server)
+## Presenter Server for Windows and Linux [![Build Status](https://travis-ci.com/FelixWohlfrom/Presenter-Server.svg?branch=master)](https://travis-ci.com/FelixWohlfrom/Presenter-Server)
 
 TL;DR: Check how to [run](#how-to-run).
 
