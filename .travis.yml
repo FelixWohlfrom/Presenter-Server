@@ -17,7 +17,7 @@ before_install:
 
   # Now initialize the docker image
   - docker pull $DOCKER_IMG
-  - docker run -w /root --name test -d $DOCKER_IMG sleep infinity
+  - docker run -w /root --name test --security-opt seccomp:unconfined -d $DOCKER_IMG sleep infinity
   - docker cp . test:/root/
 
 install:
