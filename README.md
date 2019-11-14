@@ -13,7 +13,7 @@ The following systems are currently supported:
 - Windows 10
 - Ubuntu 16.04 LTS
 - Ubuntu 18.04 LTS
-- Ubuntu 19.04
+- Ubuntu 19.10
 
 On Linux write access to /dev/uinput or /dev/input/uinput required - e.g. as root.
 
