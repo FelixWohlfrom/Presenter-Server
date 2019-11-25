@@ -4,7 +4,7 @@ TL;DR: Check how to [run](#how-to-run).
 
 This is a simple reference server implementation for the remote control protocol. Currently it can be used to remote control a presentation e.g. on your notebook e.g. via an android smartphone.
 
-It supports remote control via bluetooth. Remote controling via network (e.g. wifi) is also planned.
+It supports remote control via bluetooth and network (e.g. wifi).
 
 A reference client for android can be found [here](https://github.com/FelixWohlfrom/Presenter-Client-Android).
 
